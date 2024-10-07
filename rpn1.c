@@ -15,7 +15,7 @@ stack* create() {
 
 // Push an element onto the stack
 stack* push(stack* top, int x) {
-    stack* elmt = (stack*)malloc(sizeof(stack));
+    stack* elmt = calloc(1, sizeof(stack));
     assert(elmt != NULL); // Assert memory allocation was successful
 
     elmt->value = x;
