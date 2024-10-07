@@ -24,13 +24,13 @@ stack* push(stack* top, int x) {
 }
 
 // Pop an element from the stack
-int pop(stack** top) {
-    assert(top != NULL && *top != NULL); // Assert that top is not NULL and stack is not empty
+int pop(stack** p_top) {
+    assert(p_top != NULL && *p_top != NULL); // Assert that top is not NULL and stack is not empty
 
-    stack* p = *top;  // Pointer to the top node
-    int popped = p->value;  // Extracted value
-    *top = p->next;  // Make the next node the new top node
-    free(p);  // Freeing the top node
+    stack* top = *p_top;  // Pointer to the top node
+    int popped = top->value;  // Extracted value
+    *p_top = top->next;  // Make the next node the new top node
+    free(top);  // Freeing the top node
     return popped;  // Return the popped value
 }
  //The pop function takes a pointer to a pointer (stack** top) to allow modification of the original pointer representing the top of the stack.
@@ -38,10 +38,9 @@ int pop(stack** top) {
 
 // Display the stack elements
 void display(stack* top) {
-    stack* ptrav = top;  // Pointer to traverse the linked list
-    while (ptrav != NULL) {
-        printf("%d\n", ptrav->value);
-        ptrav = ptrav->next;
+    while (top != NULL) {
+        printf("%d\n", top->value);
+        top = top->next;
     }
 }
 
