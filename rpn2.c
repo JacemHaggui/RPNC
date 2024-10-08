@@ -33,7 +33,7 @@ int is_valid_token(char *str) {
 //test case
 int main() {
     int res1 = is_valid_token("433");
-    int res2 = is_valid_token("+----");
-    printf("%d",res1);
+    int res2 = is_valid_token("*");
+    printf("%d",res2);
     return 0;
 }
