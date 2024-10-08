@@ -1,30 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-
-// check if a string is an integer or not
-int is_integer(char* input) {
-    // check if the input is empty
-    if(input == ""){
-        return 0;
+// Function to check if a string is an integer (only contains digits)
+int is_integer(char *str) {
+    // Check if the string is empty
+    if (*str == '\0') {
+        return 0; // Not an integer
     }
 
-    int i = 0;
-    int valid = 1;
-    // iterate each character in the input
-    while(input[i] != '\0' && valid){
-        // check if the character is an integer using ASCII code
-        if(input[i] < 48 || input[i] > 57){
-            valid = 0;
+    // Check each character to see if it's a digit
+    for (int i = 0; str[i] != '\0'; i++) {
+        // Check if the character is between '0' and '9'
+        if (str[i] < '0' || str[i] > '9') { //chars are ASCII values
+            return 0; // Found a non-digit character
         }
-        i++;
     }
-    return valid;
+    return 1; // String contains only digits
+}
+
+//check if a string is an arithmetic operator
+int is_arithmetic_operator(const char *str) {
+    // Check if the string length is 1 and it is one of the operators
+    return (strlen(str) == 1 && (str[0] == '+' || str[0] == '-' || str[0] == '*' || str[0] == '/'));
+}
+
+// Function to check if a string is a valid token (integer or operator)
+int is_valid_token(char *str) {
+    return is_integer(str) || is_arithmetic_operator(str);
 }
 
 //test case
 int main() {
-    int res = is_integer("4 33");
-    printf("%d",res);
+    int res1 = is_valid_token("433");
+    int res2 = is_valid_token("+----");
+    printf("%d",res1);
     return 0;
 }
