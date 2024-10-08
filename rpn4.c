@@ -6,7 +6,8 @@
 // The help message
 const char *manuel = "Only integers and arithmetic operators are accepted. \
 You have to enter 2 integers and the arithmetic operator after them. \
-For example, to calculate 1+2, enter 1 2 +.";
+If you want to do a multiplication, use '*'. \
+For example, to calculate 1*2, enter 1 2 '*'.";
 
 // Stack structure definition with typedef
 typedef struct stack {
