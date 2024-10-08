@@ -189,6 +189,7 @@ int apply_operation(int a, int b, char* op) {
 }
 
 // Implementing the DROP keyword
+// DROP removes the latest element inserted in the stack
 void drop(stack** top) {
     if (*top == NULL) {
         printf("ERROR\n");
@@ -198,6 +199,7 @@ void drop(stack** top) {
 }
 
 // Implementing the DUP keyword
+// DUP duplicates the latest element inserted in the stack
 void dup(stack** top) {
     if (*top == NULL) {
         printf("ERROR\n");
@@ -209,6 +211,7 @@ void dup(stack** top) {
 }
 
 // Implementing the SWAP keyword
+// SWAP swaps the two latest elements inserted in the stack
 void swap(stack** top) {
     if (*top != NULL && (*top)->next != NULL) {
         int first = pop(top);
@@ -221,6 +224,7 @@ void swap(stack** top) {
 }
 
 // Implementing the ROT keyword
+// ROT changes the order of the three latest elements inserted in the stack
 void ROT(stack** top) {
     if (*top != NULL && (*top)->next != NULL && ((*top)->next)->next != NULL) {
         int first = pop(top);
