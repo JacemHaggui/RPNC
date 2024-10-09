@@ -4,7 +4,10 @@
 #include <string.h>
 
 // The help message
-const char *manuel = "Only integers and arithmetic operators are accepted. You have to enter 2 integers and the arithmetic operator after them. For example, to calculate 1+2, enter 1 2 +.";
+const char *manuel = "Only integers and arithmetic operators are accepted. \
+You have to enter 2 integers and the arithmetic operator after them. \
+If you want to do a multiplication, use '*'. \
+For example, to calculate 1*2, enter 1 2 '*'.";
 
 // Stack structure definition with typedef
 typedef struct stack {
@@ -12,7 +15,6 @@ typedef struct stack {
     struct stack* next;       // Pointer to the next node
 } stack;
 
-//----------------------------------------------------------------------------------------
 // Function declarations
 stack* create();                        // Create a new stack
 stack* push(stack* top, int x);        // Push an element onto the stack
@@ -21,15 +23,29 @@ void display(stack* top);               // Display stack elements
 
 int is_integer(char *str);              // Check if a string is an integer
 int is_arithmetic_operator(const char *str); // Check if a string is an arithmetic operator
+int is_keyword(const char* str);        // Check if a string is a keyword
 int is_valid_token(char *str);          // Check if a string is a valid token
 
 // Apply an arithmetic operation on two integers
 int apply_operation(int a, int b, char* op);
-//----------------------------------------------------------------------------------------
+
+// Implementing the DROP keyword
+void drop(stack** top); // Change the parameter to stack** for correct manipulation
+
+// Implementing the DUP keyword
+void dup(stack** top); // Change the parameter to stack** for correct manipulation
+
+// Implementing the SWAP keyword
+void swap(stack** top); // Change the parameter to stack** for correct manipulation
+
+// Implementing the ROT keyword
+void ROT(stack** top); // Change the parameter to stack** for correct manipulation
+
+void apply_keyword(stack** top, char* key); // Change the parameter to stack**
 
 int main(int argc, char* argv[]) {
     // Checking if user asked for help
-    if ((argc == 1) || (argc == 2 && (strcmp(argv[1], "-h") || strcmp(argv[1], "--help")))) {
+    if ((argc == 1) || (argc == 2 && (strcmp(argv[1], "-h") && strcmp(argv[1], "--help")))) {
         printf("%s\n", manuel);
         return 0;
     }
@@ -53,11 +69,15 @@ int main(int argc, char* argv[]) {
                 int res = apply_operation(b, a, argv[i]); // Apply the operation
                 stack = push(stack, res); // Push the result back onto the stack
             }
-            if (is_integer(argv[i])) {  // If token is an integer
+            else if (is_integer(argv[i])) {  // If token is an integer
                 int res = atoi(argv[i]); // Convert string to integer
                 stack = push(stack, res); // Push the integer onto the stack
             }
-        } else {
+            else if (is_keyword(argv[i])) { // Check if it's a keyword
+                apply_keyword(&stack, argv[i]); // Apply the corresponding function
+            }
+        }
+        else {
             printf("ERROR: Invalid token\n");
             printf("The character is: %s\n", argv[i]);
             display(stack);              // Display the current stack
@@ -75,9 +95,7 @@ int main(int argc, char* argv[]) {
     return 0;                            // Successful exit
 }
 
-//----------------------------------------------------------------------------------------
-
-// Function definitions
+// Function definitions...
 
 // Create a new stack (initializes top as NULL)
 stack* create() {
@@ -136,10 +154,17 @@ int is_arithmetic_operator(const char *str) {
     return (strlen(str) == 1 && (str[0] == '+' || str[0] == '-' || str[0] == '*' || str[0] == '/'));
 }
 
-// Function to check if a string is a valid token (integer or operator)
-int is_valid_token(char *str) {
-    return is_integer(str) || is_arithmetic_operator(str); // Valid if it's an integer or operator
+// Function to check if a string is a keyword
+int is_keyword(const char* str) {
+    return (strcmp(str, "DROP") == 0 || strcmp(str, "DUP") == 0 || 
+            strcmp(str, "SWAP") == 0 || strcmp(str, "ROT") == 0);
 }
+
+// Function to check if a string is a valid token (integer or operator or keyword)
+int is_valid_token(char *str) {
+    return is_integer(str) || is_arithmetic_operator(str) || is_keyword(str); 
+}
+
 
 // Apply an arithmetic operation on two integers
 int apply_operation(int a, int b, char* op) {
@@ -160,5 +185,68 @@ int apply_operation(int a, int b, char* op) {
         default:
             printf("Error: Invalid operator '%c'.\n", op[0]);
             return 1;                  // Exit with error code
+    }
+}
+
+// Implementing the DROP keyword
+// DROP removes the latest element inserted in the stack
+void drop(stack** top) {
+    if (*top == NULL) {
+        printf("ERROR\n");
+    } else {
+        pop(top);
+    }
+}
+
+// Implementing the DUP keyword
+// DUP duplicates the latest element inserted in the stack
+void dup(stack** top) {
+    if (*top == NULL) {
+        printf("ERROR\n");
+    } else {
+        int dup_value = pop(top);
+        *top = push(*top, dup_value); // Push twice
+        *top = push(*top, dup_value);
+    }
+}
+
+// Implementing the SWAP keyword
+// SWAP swaps the two latest elements inserted in the stack
+void swap(stack** top) {
+    if (*top != NULL && (*top)->next != NULL) {
+        int first = pop(top);
+        int second = pop(top);
+        *top = push(*top, first);
+        *top = push(*top, second);
+    } else {
+        printf("ERROR\n");
+    }
+}
+
+// Implementing the ROT keyword
+// ROT changes the order of the three latest elements inserted in the stack
+void ROT(stack** top) {
+    if (*top != NULL && (*top)->next != NULL && ((*top)->next)->next != NULL) {
+        int first = pop(top);
+        int second = pop(top);
+        int third = pop(top);
+        *top = push(*top, second);
+        *top = push(*top, first);
+        *top = push(*top, third);
+    } else {
+        printf("ERROR\n");
+    }
+}
+
+// Apply the keyword
+void apply_keyword(stack** top, char* key) {
+    if (strcmp(key, "DROP") == 0) {
+        drop(top);
+    } else if (strcmp(key, "DUP") == 0) {
+        dup(top);
+    } else if (strcmp(key, "SWAP") == 0) {
+        swap(top);
+    } else if (strcmp(key, "ROT") == 0) {
+        ROT(top);
     }
 }
