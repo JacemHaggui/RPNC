@@ -5,6 +5,10 @@
 
 // The help message
 const char *manuel = "Only integers and arithmetic operators are accepted. You have to enter 2 integers and the arithmetic operator after them. For example, to calculate 1+2, enter 1 2 +.";
+const char *manuel = "Only integers and arithmetic operators are accepted. \
+You have to enter 2 integers and the arithmetic operator after them. \
+If you want to do a multiplication, use '*'. \
+For example, to calculate 1*2, enter 1 2 '*'.";
 
 // Stack structure definition with typedef
 typedef struct stack {
@@ -160,5 +164,68 @@ int apply_operation(int a, int b, char* op) {
         default:
             printf("Error: Invalid operator '%c'.\n", op[0]);
             return 1;                  // Exit with error code
+    }
+}
+
+// Implementing the DROP keyword
+// DROP removes the latest element inserted in the stack
+void drop(stack** top) {
+    if (*top == NULL) {
+        printf("ERROR\n");
+    } else {
+        pop(top);
+    }
+}
+
+// Implementing the DUP keyword
+// DUP duplicates the latest element inserted in the stack
+void dup(stack** top) {
+    if (*top == NULL) {
+        printf("ERROR\n");
+    } else {
+        int dup_value = pop(top);
+        *top = push(*top, dup_value); // Push twice
+        *top = push(*top, dup_value);
+    }
+}
+
+// Implementing the SWAP keyword
+// SWAP swaps the two latest elements inserted in the stack
+void swap(stack** top) {
+    if (*top != NULL && (*top)->next != NULL) {
+        int first = pop(top);
+        int second = pop(top);
+        *top = push(*top, first);
+        *top = push(*top, second);
+    } else {
+        printf("ERROR\n");
+    }
+}
+
+// Implementing the ROT keyword
+// ROT changes the order of the three latest elements inserted in the stack
+void ROT(stack** top) {
+    if (*top != NULL && (*top)->next != NULL && ((*top)->next)->next != NULL) {
+        int first = pop(top);
+        int second = pop(top);
+        int third = pop(top);
+        *top = push(*top, second);
+        *top = push(*top, first);
+        *top = push(*top, third);
+    } else {
+        printf("ERROR\n");
+    }
+}
+
+// Apply the keyword
+void apply_keyword(stack** top, char* key) {
+    if (strcmp(key, "DROP") == 0) {
+        drop(top);
+    } else if (strcmp(key, "DUP") == 0) {
+        dup(top);
+    } else if (strcmp(key, "SWAP") == 0) {
+        swap(top);
+    } else if (strcmp(key, "ROT") == 0) {
+        ROT(top);
     }
 }
