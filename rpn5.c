@@ -189,20 +189,20 @@ int apply_operation(int a, int b, char* op) {
 }
 
 // Implementing the DROP keyword
-// DROP removes the latest element inserted in the stack
 void drop(stack** top) {
     if (*top == NULL) {
-        printf("ERROR\n");
+        printf("ERROR : The stack is empty. \
+        DROP removes the latest element inserted in the stack.\n");
     } else {
         pop(top);
     }
 }
 
 // Implementing the DUP keyword
-// DUP duplicates the latest element inserted in the stack
 void dup(stack** top) {
     if (*top == NULL) {
-        printf("ERROR\n");
+        printf("ERROR : The stack is empty. \
+        DUP duplicates the latest element inserted in the stack.\n");
     } else {
         int dup_value = pop(top);
         *top = push(*top, dup_value); // Push twice
@@ -211,7 +211,6 @@ void dup(stack** top) {
 }
 
 // Implementing the SWAP keyword
-// SWAP swaps the two latest elements inserted in the stack
 void swap(stack** top) {
     if (*top != NULL && (*top)->next != NULL) {
         int first = pop(top);
@@ -219,12 +218,12 @@ void swap(stack** top) {
         *top = push(*top, first);
         *top = push(*top, second);
     } else {
-        printf("ERROR\n");
+        printf("ERROR : The stack is empty. \
+        SWAP swaps the two latest elements inserted in the stack.\n");
     }
 }
 
 // Implementing the ROT keyword
-// ROT changes the order of the three latest elements inserted in the stack
 void ROT(stack** top) {
     if (*top != NULL && (*top)->next != NULL && ((*top)->next)->next != NULL) {
         int first = pop(top);
@@ -234,7 +233,8 @@ void ROT(stack** top) {
         *top = push(*top, first);
         *top = push(*top, third);
     } else {
-        printf("ERROR\n");
+        printf("ERROR : The stack is empty. \
+        ROT changes the order of the three latest elements inserted in the stack.\n");
     }
 }
 
