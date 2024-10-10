@@ -5,9 +5,14 @@
 
 // The help message
 const char *manuel = "Only integers and arithmetic operators are accepted. \
-You have to enter 2 integers and the arithmetic operator after them. \
-If you want to do a multiplication, use '*'. \
-For example, to calculate 1*2, enter 1 2 '*'.";
+You have to enter 2 integers and the arithmetic operator after them. \n
+If you want to do a multiplication, use '*'. \n
+For example, to calculate 1*2, enter 1 2 '*'. \n
+
+DROP removes the latest element inserted in the stack. \n
+DUP duplicates the latest element inserted in the stack. \n
+SWAP swaps the two latest elements inserted in the stack. \n
+ROT changes the order of the three latest elements inserted in the stack.";
 
 // Stack structure definition with typedef
 typedef struct stack {
@@ -191,8 +196,7 @@ int apply_operation(int a, int b, char* op) {
 // Implementing the DROP keyword
 void drop(stack** top) {
     if (*top == NULL) {
-        printf("ERROR : The stack is empty. \
-        DROP removes the latest element inserted in the stack.\n");
+        printf("ERROR\n");
     } else {
         pop(top);
     }
@@ -201,8 +205,7 @@ void drop(stack** top) {
 // Implementing the DUP keyword
 void dup(stack** top) {
     if (*top == NULL) {
-        printf("ERROR : The stack is empty. \
-        DUP duplicates the latest element inserted in the stack.\n");
+        printf("ERROR\n");
     } else {
         int dup_value = pop(top);
         *top = push(*top, dup_value); // Push twice
@@ -218,8 +221,7 @@ void swap(stack** top) {
         *top = push(*top, first);
         *top = push(*top, second);
     } else {
-        printf("ERROR : The stack is empty. \
-        SWAP swaps the two latest elements inserted in the stack.\n");
+        printf("ERROR\n");
     }
 }
 
@@ -233,8 +235,7 @@ void ROT(stack** top) {
         *top = push(*top, first);
         *top = push(*top, third);
     } else {
-        printf("ERROR : The stack is empty. \
-        ROT changes the order of the three latest elements inserted in the stack.\n");
+        printf("ERROR\n");
     }
 }
 
