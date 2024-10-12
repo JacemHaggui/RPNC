@@ -31,7 +31,7 @@ int is_keyword(const char* str);        // Check if a string is a keyword
 int is_valid_token(char *str);          // Check if a string is a valid token
 
 // Apply an arithmetic operation on two integers
-int apply_operation(int a, int b, char* op);
+int apply_operation(int a, int b, char* op, int* error);
 
 // Implementing the DROP keyword
 void drop(stack** top); // Change the parameter to stack** for correct manipulation
@@ -57,6 +57,7 @@ int main(int argc, char* argv[]) {
     stack* stack = create();            // Create an empty stack
     // Process each argument
     for (int i = 1; i < argc; i++) {
+        int error = 0;
         if (is_valid_token(argv[i])) {  // Check if the token is valid
             if (is_arithmetic_operator(argv[i])) { // If token is an operator
                 // Checking if stack is empty before popping two elements
@@ -70,7 +71,7 @@ int main(int argc, char* argv[]) {
                     return 1;  // Return an error code
                 }
                 int b = pop(&stack);  // Pop the second operand
-                int res = apply_operation(b, a, argv[i]); // Apply the operation
+                int res = apply_operation(b, a, argv[i], &error); // Apply the operation
                 stack = push(stack, res); // Push the result back onto the stack
             }
             else if (is_integer(argv[i])) {  // If token is an integer
@@ -154,6 +155,10 @@ int is_integer(char *str) {
 
 // Check if a string is an arithmetic operator
 int is_arithmetic_operator(const char *str) {
+    // making the program tolerate \* and '*'
+    if (strcmp(str, "\\*") == 0 || strcmp(str, "'*'") == 0){
+        return 1;
+    }
     // Check if the string length is 1 and it is one of the operators
     return (strlen(str) == 1 && (str[0] == '+' || str[0] == '-' || str[0] == '*' || str[0] == '/'));
 }
@@ -171,7 +176,11 @@ int is_valid_token(char *str) {
 
 
 // Apply an arithmetic operation on two integers
-int apply_operation(int a, int b, char* op) {
+int apply_operation(int a, int b, char* op, int* error) {
+    // making the program treat \* and '*' as *
+    if (strcmp(op, "\\*") == 0 || strcmp(op, "'*'") == 0) {//using // to escape the backslash
+        op = "*";  // Treat \* as *
+    }
     switch (op[0]) {
         case '+':
             return a + b;              // Addition
@@ -183,11 +192,12 @@ int apply_operation(int a, int b, char* op) {
             if (b != 0) {              // Prevent division by zero
                 return a / b;          // Division
             } else {
-                printf("Error: Division by zero.\n");
-                return 1;              // Exit with error code
+                *error = 1;
+                return 1;
             }
         default:
-            printf("Error: Invalid operator '%c'.\n", op[0]);
+            printf("Error\n");
+            *error = 1;
             return 1;                  // Exit with error code
     }
 }

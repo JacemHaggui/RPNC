@@ -15,7 +15,7 @@ echo "------------------" >> $LOG_FILE
 # Read the unit tests from unit_tests.txt
 while IFS=":" read -r inputs expected_output; do
   # Prepare the input string to pass to the program
-  input_args=$(echo "$inputs" | tr ' ' ' ')
+  input_args="$inputs"
 
   # Run the program and capture its output
   output=$($PROGRAM $input_args)

@@ -140,6 +140,10 @@ int is_integer(char *str) {
 
 // Check if a string is an arithmetic operator
 int is_arithmetic_operator(const char *str) {
+    // making the program tolerate \* and '*'
+    if (strcmp(str, "\\*") == 0 || strcmp(str, "'*'") == 0){
+        return 1;
+    }
     // Check if the string length is 1 and it is one of the operators
     return (strlen(str) == 1 && (str[0] == '+' || str[0] == '-' || str[0] == '*' || str[0] == '/'));
 }
@@ -151,6 +155,10 @@ int is_valid_token(char *str) {
 
 // Apply an arithmetic operation on two integers
 int apply_operation(int a, int b, char* op, int* error) {
+    // making the program treat \* and '*' as *
+    if (strcmp(op, "\\*") == 0 || strcmp(op, "'*'") == 0) {//using // to escape the backslash
+        op = "*";  // Treat \* as *
+    }
     switch (op[0]) {
         case '+':
             return a + b;              // Addition
