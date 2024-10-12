@@ -4,10 +4,10 @@
 #include <string.h>
 
 // The help message
-const char *manuel = "Only integers and arithmetic operators are accepted. \
-You have to enter 2 integers and the arithmetic operator after them. \n
-If you want to do a multiplication, use '*'. \n
-For example, to calculate 1*2, enter 1 2 '*'. \n"
+const char *manuel = "Only integers and arithmetic operators are accepted.\n"
+                     "You have to enter 2 integers and the arithmetic operator after them.\n"
+                     "If you want to do a multiplication, use '*'.\n"
+                     "For example, to calculate 1*2, enter 1 2 '*'.\n";
 
 // Stack structure definition with typedef
 typedef struct stack {
@@ -27,7 +27,7 @@ int is_arithmetic_operator(const char *str); // Check if a string is an arithmet
 int is_valid_token(char *str);          // Check if a string is a valid token
 
 // Apply an arithmetic operation on two integers
-int apply_operation(int a, int b, char* op);
+int apply_operation(int a, int b, char* op, int* error);
 //----------------------------------------------------------------------------------------
 
 int main(int argc, char* argv[]) {
@@ -40,6 +40,7 @@ int main(int argc, char* argv[]) {
     stack* stack = create();            // Create an empty stack
     // Process each argument
     for (int i = 1; i < argc; i++) {
+        int error = 0;
         if (is_valid_token(argv[i])) {  // Check if the token is valid
             if (is_arithmetic_operator(argv[i])) { // If token is an operator
                 // Checking if stack is empty before popping two elements
@@ -53,18 +54,22 @@ int main(int argc, char* argv[]) {
                     return 1;  // Return an error code
                 }
                 int b = pop(&stack);  // Pop the second operand
-                int res = apply_operation(b, a, argv[i]); // Apply the operation
+
+                int res = apply_operation(b, a, argv[i], &error); // Apply the operation
+                if(error){
+                    printf("ERROR\n");
+                    return 1;
+                }
                 stack = push(stack, res); // Push the result back onto the stack
             }
             if (is_integer(argv[i])) {  // If token is an integer
                 int res = atoi(argv[i]); // Convert string to integer
                 stack = push(stack, res); // Push the integer onto the stack
             }
-        } else {
-            printf("ERROR: Invalid token\n");
-            printf("The character is: %s\n", argv[i]);
-            display(stack);              // Display the current stack
-            return 0;                    // Exit program on error
+        }
+        else{
+            printf("ERROR\n");
+            return 1;
         }
     }
     
@@ -145,7 +150,7 @@ int is_valid_token(char *str) {
 }
 
 // Apply an arithmetic operation on two integers
-int apply_operation(int a, int b, char* op) {
+int apply_operation(int a, int b, char* op, int* error) {
     switch (op[0]) {
         case '+':
             return a + b;              // Addition
@@ -157,11 +162,12 @@ int apply_operation(int a, int b, char* op) {
             if (b != 0) {              // Prevent division by zero
                 return a / b;          // Division
             } else {
-                printf("Error: Division by zero.\n");
-                return 1;              // Exit with error code
+                *error = 1;
+                return 1;
             }
         default:
-            printf("Error: Invalid operator '%c'.\n", op[0]);
+            printf("Error\n");
+            *error = 1;
             return 1;                  // Exit with error code
     }
 }

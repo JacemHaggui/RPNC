@@ -3,16 +3,15 @@
 #include <assert.h> // Include assert header
 #include <string.h>
 
-// The help message
-const char *manuel = "Only integers and arithmetic operators are accepted. \
-You have to enter 2 integers and the arithmetic operator after them. \n
-If you want to do a multiplication, use '*'. \n
-For example, to calculate 1*2, enter 1 2 '*'. \n
-
-DROP removes the latest element inserted in the stack. \n
-DUP duplicates the latest element inserted in the stack. \n
-SWAP swaps the two latest elements inserted in the stack. \n
-ROT changes the order of the three latest elements inserted in the stack.";
+//the help message
+const char *manuel = "Only integers and arithmetic operators are accepted. "
+"You have to enter 2 integers and the arithmetic operator after them. \n"
+"If you want to do a multiplication, use '*'. \n"
+"For example, to calculate 1*2, enter 1 2 '*'. \n\n"
+"DROP removes the latest element inserted in the stack. \n"
+"DUP duplicates the latest element inserted in the stack. \n"
+"SWAP swaps the two latest elements inserted in the stack. \n"
+"ROT changes the order of the three latest elements inserted in the stack.";
 
 // Stack structure definition with typedef
 typedef struct stack {

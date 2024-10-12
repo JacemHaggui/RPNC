@@ -21,8 +21,8 @@ while IFS=":" read -r inputs expected_output; do
   output=$($PROGRAM $input_args)
 
   # Extract only the numeric part of the output (ignoring any extra text like "RESULT :")
-  # Use grep to search for numeric values, including negatives
-    numeric_output=$(echo "$output" | grep -o '[+-]*[0-9]\+')
+  # Use grep to search for numeric values, including negatives or the word "ERROR"
+  numeric_output=$(echo "$output" | grep -Eo '([+-]*[0-9]+|ERROR)')
   # Compare the extracted numeric output with the expected output
   if [[ "$numeric_output" == "$expected_output" ]]; then
     result="Success"
